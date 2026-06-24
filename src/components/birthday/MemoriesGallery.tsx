@@ -1,30 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { X, ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import gayatriMosaic from "@/assets/gayatri-mosaic.png.asset.json";
 
 // ============================================================
-// MEMORIES — replace `src` with real photos when ready.
-// Keep the array length, captions, and categories the same shape.
+// MEMORIES — sample photo of Gayatri is shown as a placeholder.
+// Replace `sampleSrc` (or individual entries) with your own photo
+// URLs whenever you're ready.
 // ============================================================
 type Memory = { src: string; caption: string; memory: string; category: string };
 
-const ids = [
-  "photo-1543852786-1cf6624b9987",
-  "photo-1574144611937-0df059b5ef3e",
-  "photo-1425082661705-1834bfd09dca",
-  "photo-1583337130417-3346a1be7dee",
-  "photo-1591871937573-74dbba515c4c",
-  "photo-1444212477490-ca407925329e",
-  "photo-1518791841217-8f162f1e1131",
-  "photo-1561948955-570b270e7c36",
-  "photo-1450778869180-41d0601e046e",
-  "photo-1415369629372-26f2fe60c467",
-  "photo-1546182990-dffeafbe841d",
-  "photo-1437622368342-7a3d73a34c8f",
-  "photo-1552053831-71594a27632d",
-  "photo-1573865526739-10659fec78a5",
-  "photo-1517423440428-a5a00ad493e8",
-];
+const sampleSrc = gayatriMosaic.url;
 
 const categories = [
   "Childhood Memories",
@@ -34,8 +20,8 @@ const categories = [
   "Favorite Moments",
 ];
 
-const memories: Memory[] = ids.map((id, i) => ({
-  src: `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=80`,
+const memories: Memory[] = Array.from({ length: 15 }, (_, i) => ({
+  src: sampleSrc,
   caption: `Sweet moment #${i + 1}`,
   memory: "A little snapshot from our story — replace this with a real memory whenever you'd like.",
   category: categories[i % categories.length],
