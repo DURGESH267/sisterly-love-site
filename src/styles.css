@@ -4,6 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-display: "Playfair Display", serif;
+  --font-script: "Dancing Script", cursive;
+  --font-body: "Quicksand", sans-serif;
+}
+
 /*
  * Design system definition.
  *
