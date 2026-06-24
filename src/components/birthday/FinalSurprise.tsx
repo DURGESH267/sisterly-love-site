@@ -108,7 +108,7 @@ export function FinalSurprise() {
               >
                 <p>You deserve all the happiness in the world.</p>
                 <p>Thank you for being such an amazing sister.</p>
-                <p className="text-secondary">Love, Teja</p>
+                <p className="text-secondary">Love, Your Brother</p>
               </motion.div>
 
               <motion.button
