@@ -43,7 +43,7 @@ export function LetterSection() {
           className="mt-10 text-right"
         >
           <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">With lots of love,</p>
-          <p className="font-script text-3xl text-secondary">Teja</p>
+          <p className="font-script text-3xl text-secondary">Your Brother</p>
         </motion.div>
       </motion.div>
     </section>

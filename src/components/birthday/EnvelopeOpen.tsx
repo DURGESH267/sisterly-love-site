@@ -41,7 +41,7 @@ export function EnvelopeOpen({ onDone }: { onDone: () => void }) {
           className="glass-strong absolute inset-x-6 top-6 rounded-md p-6 text-center"
         >
           <p className="font-script text-2xl text-primary">Dear Gayatri…</p>
-          <p className="mt-2 text-xs text-muted-foreground">with love, Teja</p>
+          <p className="mt-2 text-xs text-muted-foreground">with love, Your Brother</p>
         </motion.div>
         <motion.div
           initial={{ rotateX: 0 }}

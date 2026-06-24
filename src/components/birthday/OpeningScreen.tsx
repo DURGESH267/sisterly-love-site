@@ -39,8 +39,8 @@ export function OpeningScreen({ onOpen }: { onOpen: () => void }) {
         transition={{ duration: 1, delay: 1 }}
         className="mt-8 max-w-xl text-base text-muted-foreground sm:text-lg"
       >
-        A special gift made with love by your brother,{" "}
-        <span className="font-semibold text-secondary">Teja</span>.
+        A special gift made with love by{" "}
+        <span className="font-semibold text-secondary">Your Brother</span>.
       </motion.p>
 
       <motion.button

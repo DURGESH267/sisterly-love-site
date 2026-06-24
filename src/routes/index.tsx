@@ -14,10 +14,10 @@ import { Footer } from "@/components/birthday/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Happy Birthday Gayatri ❤️ — from Teja" },
+      { title: "Happy Birthday Gayatri ❤️ — from Your Brother" },
       { name: "description", content: "A heartfelt birthday gift website made with love for Gayatri." },
       { property: "og:title", content: "Happy Birthday Gayatri ❤️" },
-      { property: "og:description", content: "A heartfelt birthday gift website made with love by Teja." },
+      { property: "og:description", content: "A heartfelt birthday gift website made with love by your brother." },
     ],
   }),
   component: Index,
