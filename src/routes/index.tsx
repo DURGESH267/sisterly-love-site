@@ -5,7 +5,7 @@ import { FloatingBackground } from "@/components/birthday/FloatingBackground";
 import { OpeningScreen } from "@/components/birthday/OpeningScreen";
 import { EnvelopeOpen } from "@/components/birthday/EnvelopeOpen";
 import { LetterSection } from "@/components/birthday/LetterSection";
-import { MemoriesGallery } from "@/components/birthday/MemoriesGallery";
+import MemoriesGallery from "@/components/birthday/MemoriesGallery";
 import { WhyAmazing } from "@/components/birthday/WhyAmazing";
 import { Wishes } from "@/components/birthday/Wishes";
 import { FinalSurprise } from "@/components/birthday/FinalSurprise";
