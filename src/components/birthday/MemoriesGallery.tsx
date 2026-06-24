@@ -41,7 +41,24 @@ const memories: Memory[] = ids.map((id, i) => ({
   category: categories[i % categories.length],
 }));
 
-const heights = ["h-56", "h-72", "h-64", "h-80", "h-60"];
+// Mosaic tile spans — varying sizes make a frame-like collage
+const spans = [
+  "col-span-2 row-span-2",
+  "col-span-1 row-span-1",
+  "col-span-1 row-span-2",
+  "col-span-1 row-span-1",
+  "col-span-2 row-span-1",
+  "col-span-1 row-span-1",
+  "col-span-1 row-span-1",
+  "col-span-2 row-span-2",
+  "col-span-1 row-span-1",
+  "col-span-1 row-span-1",
+  "col-span-2 row-span-1",
+  "col-span-1 row-span-2",
+  "col-span-1 row-span-1",
+  "col-span-1 row-span-1",
+  "col-span-2 row-span-1",
+];
 
 export function MemoriesGallery() {
   const [active, setActive] = useState<number | null>(null);
@@ -82,33 +99,32 @@ export function MemoriesGallery() {
           Tap a polaroid to relive it — or play the slideshow.
         </p>
 
-        <div className="mt-12 columns-1 gap-5 sm:columns-2 lg:columns-3 [&>*]:mb-5 [&>*]:break-inside-avoid">
+        {/* Mosaic frame — auto-rows make tiles tile cleanly across the grid */}
+        <div className="glass-strong mt-12 grid grid-cols-2 gap-2 rounded-3xl p-3 shadow-[var(--shadow-glass)] sm:grid-cols-4 sm:gap-3 sm:p-4 lg:grid-cols-6 [grid-auto-rows:120px] sm:[grid-auto-rows:140px] lg:[grid-auto-rows:160px]">
           {memories.map((m, i) => (
             <motion.button
               key={i}
-              initial={{ opacity: 0, y: 30, rotate: 0 }}
-              whileInView={{ opacity: 1, y: 0, rotate: i % 2 === 0 ? -1.5 : 1.5 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.5, delay: (i % 6) * 0.05 }}
-              whileHover={{ rotate: 0, scale: 1.03, y: -4 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.5, delay: (i % 8) * 0.04 }}
+              whileHover={{ scale: 1.02, zIndex: 5 }}
               onClick={() => {
                 setActive(i);
                 setPlaying(false);
               }}
-              className="glass block w-full rounded-lg p-3 pb-5 text-left shadow-[var(--shadow-glass)]"
+              className={`group relative overflow-hidden rounded-xl bg-muted shadow-md ring-1 ring-white/40 ${spans[i % spans.length]}`}
             >
-              <div className={`overflow-hidden rounded-md bg-muted ${heights[i % heights.length]}`}>
-                <img
-                  src={m.src}
-                  alt={m.caption}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
-                />
+              <img
+                src={m.src}
+                alt={m.caption}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <p className="font-script text-lg text-white drop-shadow">{m.caption}</p>
+                <p className="text-[10px] uppercase tracking-wider text-white/80">{m.category}</p>
               </div>
-              <p className="mt-3 font-script text-xl text-primary">{m.caption}</p>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                {m.category}
-              </p>
             </motion.button>
           ))}
         </div>
