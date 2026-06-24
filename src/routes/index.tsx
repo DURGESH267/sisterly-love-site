@@ -7,7 +7,6 @@ import { EnvelopeOpen } from "@/components/birthday/EnvelopeOpen";
 import { LetterSection } from "@/components/birthday/LetterSection";
 import { MemoriesGallery } from "@/components/birthday/MemoriesGallery";
 import { WhyAmazing } from "@/components/birthday/WhyAmazing";
-import { Timeline } from "@/components/birthday/Timeline";
 import { Wishes } from "@/components/birthday/Wishes";
 import { FinalSurprise } from "@/components/birthday/FinalSurprise";
 import { Footer } from "@/components/birthday/Footer";
@@ -50,7 +49,6 @@ function Index() {
             <LetterSection />
             <MemoriesGallery />
             <WhyAmazing />
-            <Timeline />
             <Wishes />
             <FinalSurprise />
             <Footer />
