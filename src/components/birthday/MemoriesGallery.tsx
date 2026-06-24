@@ -1,121 +1,188 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
-import { X, ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { X, Sparkles } from "lucide-react";
 import gayatriMosaic from "@/assets/gayatri-mosaic.png.asset.json";
 
 // ============================================================
-// MEMORIES — sample photo of Gayatri is shown as a placeholder.
-// Replace `sampleSrc` (or individual entries) with your own photo
-// URLs whenever you're ready.
+// PHOTO MOSAIC — a giant portrait built from many small photos.
+// Swap `tilePhotos` entries with real family photos when ready,
+// and replace `portraitSrc` with the hero portrait you want
+// revealed when the slider is pulled to the right.
 // ============================================================
-type Memory = { src: string; caption: string; memory: string; category: string };
 
-const sampleSrc = gayatriMosaic.url;
-
-const categories = [
-  "Childhood Memories",
-  "Family Moments",
-  "School Days",
-  "Recent Memories",
-  "Favorite Moments",
+// Placeholder animal photos (replace with real memories later)
+const tilePhotos: string[] = [
+  "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400&q=70", // cat
+  "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&q=70", // dog
+  "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&q=70", // squirrel
+  "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&q=70", // cat 2
+  "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&q=70", // panda
+  "https://images.unsplash.com/photo-1561948955-570b270e7c36?w=400&q=70", // kitten
+  "https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&q=70", // puppy
+  "https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&q=70", // rabbit
+  "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=400&q=70", // fox
+  "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&q=70", // bear
+  "https://images.unsplash.com/photo-1456926631375-92c8ce872def?w=400&q=70", // owl
+  "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&q=70", // squirrel 2
 ];
 
-const memories: Memory[] = Array.from({ length: 15 }, (_, i) => ({
-  src: sampleSrc,
-  caption: `Sweet moment #${i + 1}`,
-  memory: "A little snapshot from our story — replace this with a real memory whenever you'd like.",
-  category: categories[i % categories.length],
-}));
+const portraitSrc = gayatriMosaic.url;
 
-// Mosaic tile spans — varying sizes make a frame-like collage
-const spans = [
-  "col-span-2 row-span-2",
-  "col-span-1 row-span-1",
-  "col-span-1 row-span-2",
-  "col-span-1 row-span-1",
-  "col-span-2 row-span-1",
-  "col-span-1 row-span-1",
-  "col-span-1 row-span-1",
-  "col-span-2 row-span-2",
-  "col-span-1 row-span-1",
-  "col-span-1 row-span-1",
-  "col-span-2 row-span-1",
-  "col-span-1 row-span-2",
-  "col-span-1 row-span-1",
-  "col-span-1 row-span-1",
-  "col-span-2 row-span-1",
-];
+// Grid size — 8 columns × 10 rows = 80 tiles forming the portrait
+const COLS = 8;
+const ROWS = 10;
+const TILE_COUNT = COLS * ROWS;
 
 export function MemoriesGallery() {
   const [active, setActive] = useState<number | null>(null);
-  const [playing, setPlaying] = useState(false);
+  const [reveal, setReveal] = useState(0); // 0 = individual tiles, 100 = full portrait
 
-  useEffect(() => {
-    if (active === null || !playing) return;
-    const t = setInterval(() => {
-      setActive((a) => (a === null ? 0 : (a + 1) % memories.length));
-    }, 2500);
-    return () => clearInterval(t);
-  }, [active, playing]);
+  // Stable random order so tiles assemble in a non-linear sweep
+  const tileOrder = useMemo(() => {
+    const arr = Array.from({ length: TILE_COUNT }, (_, i) => i);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor((Math.sin(i * 9.137) * 0.5 + 0.5) * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }, []);
 
   useEffect(() => {
     if (active === null) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setActive(null);
-      if (e.key === "ArrowRight") setActive((a) => (a === null ? 0 : (a + 1) % memories.length));
-      if (e.key === "ArrowLeft")
-        setActive((a) => (a === null ? 0 : (a - 1 + memories.length) % memories.length));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
+  // Floating sparkles around the mosaic frame
+  const sparkles = useMemo(
+    () =>
+      Array.from({ length: 14 }, (_, i) => ({
+        id: i,
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        delay: Math.random() * 4,
+        duration: 3 + Math.random() * 3,
+        size: 10 + Math.random() * 14,
+      })),
+    [],
+  );
+
   return (
     <section className="relative z-10 px-6 py-20">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-5xl">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center font-display text-4xl font-bold sm:text-5xl"
         >
-          📸 <span className="text-gradient">Our Memories Together</span>
+          📸 <span className="text-gradient">Memories That Made You</span>
         </motion.h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-muted-foreground">
-          Tap a polaroid to relive it — or play the slideshow.
+          A portrait built from many little memories — every tile, a moment that
+          shaped the person you are today.
         </p>
 
-        {/* Mosaic frame — auto-rows make tiles tile cleanly across the grid */}
-        <div className="glass-strong mt-12 grid grid-cols-2 gap-2 rounded-3xl p-3 shadow-[var(--shadow-glass)] sm:grid-cols-4 sm:gap-3 sm:p-4 lg:grid-cols-6 [grid-auto-rows:120px] sm:[grid-auto-rows:140px] lg:[grid-auto-rows:160px]">
-          {memories.map((m, i) => (
-            <motion.button
-              key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.5, delay: (i % 8) * 0.04 }}
-              whileHover={{ scale: 1.02, zIndex: 5 }}
-              onClick={() => {
-                setActive(i);
-                setPlaying(false);
-              }}
-              className={`group relative overflow-hidden rounded-xl bg-muted shadow-md ring-1 ring-white/40 ${spans[i % spans.length]}`}
+        {/* Mosaic frame */}
+        <div className="relative mt-12">
+          {/* Floating sparkles */}
+          <div className="pointer-events-none absolute inset-0 z-20 overflow-visible">
+            {sparkles.map((s) => (
+              <motion.div
+                key={s.id}
+                className="absolute text-secondary"
+                style={{ top: `${s.top}%`, left: `${s.left}%` }}
+                animate={{ opacity: [0, 1, 0], scale: [0.6, 1.2, 0.6], rotate: [0, 180, 360] }}
+                transition={{ duration: s.duration, delay: s.delay, repeat: Infinity }}
+              >
+                <Sparkles style={{ width: s.size, height: s.size }} />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Glassmorphism frame */}
+          <div
+            className="glass-strong relative rounded-3xl p-3 sm:p-5 shadow-[0_0_60px_-10px_rgba(236,72,153,0.45)] ring-1 ring-white/40"
+            style={{ boxShadow: "0 0 80px -10px rgba(217,70,239,0.35), inset 0 0 30px rgba(255,255,255,0.25)" }}
+          >
+            <div
+              className="relative mx-auto aspect-[4/5] w-full max-w-[640px] overflow-hidden rounded-2xl bg-gradient-to-br from-pink-100/40 to-purple-100/40"
             >
-              <img
-                src={m.src}
-                alt={m.caption}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="font-script text-lg text-white drop-shadow">{m.caption}</p>
-                <p className="text-[10px] uppercase tracking-wider text-white/80">{m.category}</p>
+              {/* Tile grid (the small photos) */}
+              <div
+                className="absolute inset-0 grid"
+                style={{
+                  gridTemplateColumns: `repeat(${COLS}, 1fr)`,
+                  gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+                  gap: "2px",
+                }}
+              >
+                {Array.from({ length: TILE_COUNT }).map((_, i) => {
+                  const photoIndex = i % tilePhotos.length;
+                  const assembleDelay = tileOrder.indexOf(i) * 0.012;
+                  return (
+                    <motion.button
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.3, rotate: -15 }}
+                      whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                      viewport={{ once: true, amount: 0.1 }}
+                      transition={{ duration: 0.5, delay: assembleDelay, ease: "easeOut" }}
+                      whileHover={{ scale: 1.35, zIndex: 30, transition: { duration: 0.25 } }}
+                      onClick={() => setActive(photoIndex)}
+                      className="relative overflow-hidden rounded-[3px] focus:outline-none focus:ring-2 focus:ring-secondary"
+                      aria-label={`Memory photo ${i + 1}`}
+                    >
+                      <img
+                        src={tilePhotos[photoIndex]}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                    </motion.button>
+                  );
+                })}
               </div>
-            </motion.button>
-          ))}
+
+              {/* Portrait overlay — opacity controlled by slider */}
+              <motion.img
+                src={portraitSrc}
+                alt="A portrait of Gayatri assembled from memories"
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover mix-blend-normal"
+                style={{ opacity: reveal / 100 }}
+                initial={{ scale: 1.05 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+              />
+            </div>
+
+            {/* Slider: individual photos ↔ portrait */}
+            <div className="mx-auto mt-6 max-w-xl px-2">
+              <div className="flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
+                <span>Individual photos</span>
+                <span>Full portrait</span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={reveal}
+                onChange={(e) => setReveal(Number(e.target.value))}
+                className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gradient-to-r from-pink-300 via-purple-300 to-amber-300 accent-primary"
+                aria-label="Reveal portrait"
+              />
+            </div>
+          </div>
         </div>
+
+        <p className="mx-auto mt-8 max-w-2xl text-center font-script text-2xl text-primary sm:text-3xl">
+          "Every memory is a small piece of the beautiful person you are today. ❤️"
+        </p>
       </div>
 
+      {/* Lightbox */}
       <AnimatePresence>
         {active !== null && (
           <motion.div
@@ -126,57 +193,18 @@ export function MemoriesGallery() {
             onClick={() => setActive(null)}
           >
             <motion.div
-              key={active}
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
-              className="glass-strong relative w-full max-w-3xl rounded-2xl p-4 sm:p-6"
+              className="glass-strong relative w-full max-w-2xl rounded-2xl p-4 sm:p-6"
             >
               <img
-                src={memories[active].src}
-                alt={memories[active].caption}
-                className="max-h-[60vh] w-full rounded-xl object-cover"
+                src={tilePhotos[active]}
+                alt="Memory"
+                className="max-h-[70vh] w-full rounded-xl object-cover"
               />
-              <div className="mt-4 text-center">
-                <p className="font-script text-2xl text-primary">{memories[active].caption}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{memories[active].memory}</p>
-                <p className="mt-1 text-xs uppercase tracking-widest text-secondary">
-                  {memories[active].category}
-                </p>
-              </div>
-
-              <div className="mt-5 flex items-center justify-center gap-3">
-                <button
-                  onClick={() =>
-                    setActive((a) =>
-                      a === null ? 0 : (a - 1 + memories.length) % memories.length,
-                    )
-                  }
-                  className="glass rounded-full p-3 text-primary hover:bg-white/70"
-                  aria-label="Previous"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => setPlaying((p) => !p)}
-                  className="glass rounded-full px-4 py-3 text-primary hover:bg-white/70"
-                  aria-label={playing ? "Pause" : "Play"}
-                >
-                  {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-                </button>
-                <button
-                  onClick={() =>
-                    setActive((a) => (a === null ? 0 : (a + 1) % memories.length))
-                  }
-                  className="glass rounded-full p-3 text-primary hover:bg-white/70"
-                  aria-label="Next"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </div>
-
               <button
                 onClick={() => setActive(null)}
                 className="absolute -right-3 -top-3 grid h-10 w-10 place-items-center rounded-full bg-white text-primary shadow-lg"
