@@ -1,36 +1,46 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import gayatriMosaic from "@/assets/gayatri-mosaic.png.asset.json";
+import { AnimatePresence, motion } from "framer-motion";
+
+// ============================================================
+// REAL PHOTO ASSETS (uploaded by user — swap any of these freely)
+// ============================================================
+import photoQueen from "@/assets/photos/a_A_birthday_queen_sit.png.asset.json";
+import photoThenNow from "@/assets/photos/ChatGPT_Image_Jun_25_2026_08_32_41_PM.png.asset.json";
+import photoComic from "@/assets/photos/ChatGPT_Image_Jun_25_2026_08_36_28_PM.png.asset.json";
+import photoMosaicOld from "@/assets/photos/Screenshot_2026-06-24_220920.png.asset.json";
+import photoFramed from "@/assets/photos/Screenshot_2026-06-25_202554.png.asset.json";
+import photoCasual from "@/assets/photos/Screenshot_2026-06-25_202627.png.asset.json";
+import photoHearts from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.42.53_AM.jpeg.asset.json";
+import photoWhiteDress from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.42.57_AM.jpeg.asset.json";
+import photoTeal from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.46.03_AM.jpeg.asset.json";
+import photoSareePortrait from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.46.13_AM.jpeg.asset.json";
+import photoPurpleCutie from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.46.51_AM.jpeg.asset.json";
+
+// EDIT CAPTIONS HERE — placeholder text that you can change anytime
+type Photo = { src: string; caption: string };
+const PHOTOS: Photo[] = [
+  { src: photoThenNow.url, caption: "Then & Now — from little dreams to beautiful reality" },
+  { src: photoSareePortrait.url, caption: "Royal saree day ✨" },
+  { src: photoWhiteDress.url, caption: "Floral grace 🌸" },
+  { src: photoTeal.url, caption: "Standing tall — pure elegance" },
+  { src: photoHearts.url, caption: "Sparkles & hearts 💖" },
+  { src: photoPurpleCutie.url, caption: "Hey cutie 💜" },
+  { src: photoFramed.url, caption: "Good vibes only" },
+  { src: photoCasual.url, caption: "Effortlessly you" },
+  { src: photoQueen.url, caption: "Our Birthday Queen 👑" },
+  { src: photoComic.url, caption: "Pop-art Happy Birthday 🎉" },
+  { src: photoMosaicOld.url, caption: "A piece of the story" },
+];
+
+// Portrait used to BUILD the mosaic (face works best). Swap freely:
+const PORTRAIT_SRC = photoSareePortrait.url;
+
+// Tile pool — all real family photos
+const TILE_SRCS = PHOTOS.map((p) => p.src);
 
 // ============================================================
 // PHOTO MOSAIC — true canvas-based mosaic
-// ------------------------------------------------------------
-// Replace PORTRAIT_SRC with Gayatri's real portrait photo.
-// Replace TILE_SRCS with real family photos (more = better mosaic).
-// Tip: 30–80 tile photos give a great result. Each is rendered
-//      hundreds of times across the portrait.
 // ============================================================
-
-const PORTRAIT_SRC = gayatriMosaic.url; // <-- replace with Gayatri's portrait
-
-// Placeholder animal photos (replace with family photos later)
-const TILE_SRCS = [
-  "1425082661705-1834bfd09dca", "1444212477490-ca407925329e",
-  "1517849845537-4d257902454a", "1543466835-00a7907e9de1",
-  "1574158622682-e40e69881006", "1592194996308-7b43878e84a6",
-  "1546182990-dffeafbe841d", "1583337130417-3346a1be7dee",
-  "1561948955-570b270e7c36", "1535268647677-300dbf3d78d1",
-  "1444212477490-ca407925329e", "1530092285049-1c42085fd395",
-  "1450778869180-41d0601e046e", "1543852786-1cf6624b9987",
-  "1518791841217-8f162f1e1131", "1573865526739-10659fec78a5",
-  "1437622368342-7a3d40b3d6d4", "1551717743-49959800b1f6",
-  "1552053831-71594a27632d", "1583511655826-05700d52f4d9",
-  "1425082661705-1834bfd09dca", "1592194996308-7b43878e84a6",
-  "1438761681033-6461ffad8d80", "1488161628813-04466f872be2",
-  "1507003211169-0a1dd7228f2d", "1502685104226-ee32379fefbe",
-  "1531123897727-8f129e1688ce", "1500917293891-ef795e70e1f6",
-  "1463453091185-61582044d556", "1524504388940-b1c1722653e1",
-].map((id) => `https://images.unsplash.com/photo-${id}?w=180&h=180&fit=crop&q=70`);
 
 // Mosaic resolution — number of cells across/down. Higher = finer detail.
 const COLS = 60;
