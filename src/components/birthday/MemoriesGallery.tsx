@@ -68,7 +68,25 @@ function avgColor(ctx: CanvasRenderingContext2D, x: number, y: number, w: number
   return [r / n, g / n, b / n];
 }
 
-export default function MemoriesGallery() {
+export function MemoriesGallery() {
+  // ============ LIGHTBOX STATE ============
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const closeLightbox = () => setLightbox(null);
+  const next = () => setLightbox((i) => (i === null ? i : (i + 1) % PHOTOS.length));
+  const prev = () => setLightbox((i) => (i === null ? i : (i - 1 + PHOTOS.length) % PHOTOS.length));
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox]);
+
+  // ============ MOSAIC STATE (existing) ============
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
