@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 // ===== REAL PHOTOS =====
 import photoComic from "@/assets/photos/ChatGPT_Image_Jun_25_2026_08_36_28_PM.png.asset.json";
@@ -12,8 +12,6 @@ import photoTeal from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.46.03_AM.
 import photoSareePortrait from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.46.13_AM.jpeg.asset.json";
 import photoPurpleCutie from "@/assets/photos/WhatsApp_Image_2026-06-25_at_11.46.51_AM.jpeg.asset.json";
 import photoQueen from "@/assets/photos/a_A_birthday_queen_sit.png.asset.json";
-
-type Photo = { src: string; caption: string };
 
 // Childhood-leaning photos for LEFT mosaic
 const CHILDHOOD_TILES: string[] = [
@@ -40,20 +38,6 @@ const PRESENT_TILES: string[] = [
 // Portraits the mosaics are built TOWARDS
 const CHILDHOOD_PORTRAIT = photoChildhood.url;
 const PRESENT_PORTRAIT = photoSareePortrait.url;
-
-// Masonry gallery list
-const PHOTOS: Photo[] = [
-  { src: photoSareePortrait.url, caption: "Royal saree day ✨" },
-  { src: photoWhiteDress.url, caption: "Floral grace 🌸" },
-  { src: photoTeal.url, caption: "Standing tall — pure elegance" },
-  { src: photoHearts.url, caption: "Sparkles & hearts 💖" },
-  { src: photoPurpleCutie.url, caption: "Hey cutie 💜" },
-  { src: photoFramed.url, caption: "Good vibes only" },
-  { src: photoChildhood.url, caption: "Little you 🌷" },
-  { src: photoQueen.url, caption: "Our Birthday Queen 👑" },
-  { src: photoComic.url, caption: "Pop-art Happy Birthday 🎉" },
-  { src: photoMosaicOld.url, caption: "A piece of the story" },
-];
 
 const COLS = 80;
 const ROWS = 104;
