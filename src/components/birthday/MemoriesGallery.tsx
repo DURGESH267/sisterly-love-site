@@ -373,7 +373,10 @@ export function MemoriesGallery() {
         <p className="text-foreground/70 max-w-2xl mx-auto text-sm sm:text-base">
           Two giant portraits created using hundreds of small family photos, symbolizing the memories that make you special. Hover any tile · scroll or pinch to zoom.
         </p>
-      </div>
+      <div className="max-w-6xl mx-auto text-center mb-10">
+        <motion.h3
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
           className="font-display text-3xl sm:text-4xl md:text-5xl text-gradient mb-2"
