@@ -453,15 +453,31 @@ export function MemoriesGallery() {
         )}
       </AnimatePresence>
 
-      {/* ============ THE MOSAIC — Then & Now ============ */}
-      <div className="max-w-6xl mx-auto text-center mb-8">
-        <h3 className="font-display text-2xl sm:text-3xl text-gradient mb-2">The Mosaic</h3>
+      {/* ============ THE MOSAIC — Then ❤️ Now ============ */}
+      <div className="max-w-6xl mx-auto text-center mb-10">
+        <motion.h3
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="font-display text-3xl sm:text-4xl md:text-5xl text-gradient mb-2"
+        >
+          Then <span style={{ filter: "drop-shadow(0 0 14px rgba(244,114,182,0.8))" }}>❤️</span> Now
+        </motion.h3>
         <p className="text-foreground/60 text-xs sm:text-sm">
-          Two portraits, made of memories. Hover any tile · scroll or pinch to zoom.
+          Two portraits, made of memories. Hover any tile · scroll or pinch to zoom in.
         </p>
       </div>
 
       <div className="max-w-6xl mx-auto relative">
+        {/* Warm golden glow behind the center */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55%] h-[70%] rounded-full blur-3xl opacity-70"
+          style={{
+            background:
+              "radial-gradient(closest-side, rgba(253,224,71,0.45), rgba(251,191,36,0.25) 45%, transparent 75%)",
+          }}
+        />
         {/* Floating sparkles */}
         {sparkles.map((s) => (
           <motion.div
@@ -475,17 +491,16 @@ export function MemoriesGallery() {
           </motion.div>
         ))}
 
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 items-center">
+        <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center">
           {/* LEFT — Childhood (faces right toward center) */}
-          <div className="flex flex-col items-center">
+          <PortraitFrame label="Childhood Gayatri">
             <Mosaic
               portraitSrc={CHILDHOOD_PORTRAIT}
               tileSrcs={CHILDHOOD_TILES}
               flip
               glowColor="rgba(244,114,182,0.55)"
             />
-            <p className="mt-3 font-script text-xl sm:text-2xl text-gradient">Childhood Gayatri</p>
-          </div>
+          </PortraitFrame>
 
           {/* CENTER — THEN ❤ NOW */}
           <div className="flex md:flex-col items-center justify-center gap-2 md:gap-3 md:py-8 select-none">
@@ -513,21 +528,53 @@ export function MemoriesGallery() {
             </motion.span>
           </div>
 
-          {/* RIGHT — Present (faces left toward center, natural orientation) */}
-          <div className="flex flex-col items-center">
+          {/* RIGHT — Present (natural orientation, faces left toward center) */}
+          <PortraitFrame label="Present-day Gayatri">
             <Mosaic
               portraitSrc={PRESENT_PORTRAIT}
               tileSrcs={PRESENT_TILES}
               glowColor="rgba(217,119,255,0.55)"
             />
-            <p className="mt-3 font-script text-xl sm:text-2xl text-gradient">Present-day Gayatri</p>
-          </div>
+          </PortraitFrame>
         </div>
 
-        <p className="text-center mt-12 font-script text-xl sm:text-2xl text-gradient max-w-3xl mx-auto">
-          "From little dreams to the beautiful person you are today. ❤️"
-        </p>
+        <div className="text-center mt-12 max-w-3xl mx-auto">
+          <p className="font-script text-2xl sm:text-3xl text-gradient leading-tight">
+            From little dreams…
+          </p>
+          <p className="font-script text-2xl sm:text-3xl text-gradient leading-tight">
+            to the beautiful person you are today.
+          </p>
+        </div>
       </div>
     </section>
+  );
+}
+
+// Elegant gold glassmorphism frame around each mosaic portrait.
+function PortraitFrame({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8 }}
+      className="relative flex flex-col items-center"
+    >
+      <div
+        className="relative rounded-[2rem] p-[2px]"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(253,224,71,0.95), rgba(251,191,36,0.6) 35%, rgba(255,255,255,0.4) 60%, rgba(244,114,182,0.7))",
+          boxShadow:
+            "0 30px 80px -20px rgba(244,114,182,0.45), 0 10px 40px -10px rgba(253,224,71,0.35)",
+        }}
+      >
+        <div className="rounded-[1.9rem] bg-background/40 backdrop-blur-xl p-2 sm:p-3">
+          {children}
+        </div>
+      </div>
+      <p className="mt-4 font-script text-xl sm:text-2xl text-gradient">{label}</p>
+    </motion.div>
   );
 }
