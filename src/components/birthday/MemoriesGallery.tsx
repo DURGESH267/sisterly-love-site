@@ -55,9 +55,9 @@ const PHOTOS: Photo[] = [
   { src: photoMosaicOld.url, caption: "A piece of the story" },
 ];
 
-const COLS = 50;
-const ROWS = 65;
-const TILE_PX = 22;
+const COLS = 80;
+const ROWS = 104;
+const TILE_PX = 14;
 
 type Tile = { img: HTMLImageElement; avg: [number, number, number]; src: string };
 
@@ -163,7 +163,9 @@ function Mosaic({
           ctx.drawImage(tile.img, x, y, TILE_PX, TILE_PX);
           const idx = (cell.cy * COLS + cell.cx) * 4;
           const tr = targetData[idx], tg = targetData[idx+1], tb = targetData[idx+2];
-          ctx.fillStyle = `rgba(${tr|0},${tg|0},${tb|0},0.5)`;
+          // Subtle tint toward the target color – keeps each tile visibly a photo
+          // while letting the portrait emerge when viewed at normal zoom.
+          ctx.fillStyle = `rgba(${tr|0},${tg|0},${tb|0},0.32)`;
           ctx.fillRect(x, y, TILE_PX, TILE_PX);
         }
         setProgress(i / order.length);
