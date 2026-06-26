@@ -346,22 +346,6 @@ function Mosaic({
 // Section
 // ============================================================
 export function MemoriesGallery() {
-  const [lightbox, setLightbox] = useState<number | null>(null);
-  const closeLightbox = () => setLightbox(null);
-  const next = () => setLightbox((i) => (i === null ? i : (i + 1) % PHOTOS.length));
-  const prev = () => setLightbox((i) => (i === null ? i : (i - 1 + PHOTOS.length) % PHOTOS.length));
-
-  useEffect(() => {
-    if (lightbox === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [lightbox]);
-
   const sparkles = useMemo(
     () => Array.from({ length: 28 }, (_, i) => ({
       id: i,
@@ -387,77 +371,9 @@ export function MemoriesGallery() {
           📸 Memories That Made You
         </motion.h2>
         <p className="text-foreground/70 max-w-2xl mx-auto text-sm sm:text-base">
-          A little gallery of you, and two giant mosaics built from the very same memories.
+          Two giant portraits created using hundreds of small family photos, symbolizing the memories that make you special. Hover any tile · scroll or pinch to zoom.
         </p>
       </div>
-
-      {/* MASONRY GALLERY */}
-      <div className="max-w-6xl mx-auto mb-20 sm:mb-28 columns-2 sm:columns-3 lg:columns-4 gap-3 sm:gap-4 [column-fill:_balance]">
-        {PHOTOS.map((p, i) => (
-          <motion.button
-            key={p.src}
-            type="button"
-            onClick={() => setLightbox(i)}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: (i % 6) * 0.05 }}
-            className="group relative mb-3 sm:mb-4 block w-full break-inside-avoid overflow-hidden rounded-2xl glass-strong border border-white/20 shadow-lg hover:shadow-[0_10px_40px_-10px_rgba(236,72,153,0.6)] transition-all duration-500"
-          >
-            <img
-              src={p.src}
-              alt={p.caption}
-              loading="lazy"
-              decoding="async"
-              className="block w-full h-auto transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3 text-left translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-              <p className="text-white text-xs sm:text-sm font-medium drop-shadow">{p.caption}</p>
-            </div>
-          </motion.button>
-        ))}
-      </div>
-
-      {/* LIGHTBOX */}
-      <AnimatePresence>
-        {lightbox !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
-            onClick={closeLightbox}
-          >
-            <button type="button" onClick={(e) => { e.stopPropagation(); closeLightbox(); }} className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl flex items-center justify-center transition" aria-label="Close">×</button>
-            <button type="button" onClick={(e) => { e.stopPropagation(); prev(); }} className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl flex items-center justify-center transition" aria-label="Previous">‹</button>
-            <button type="button" onClick={(e) => { e.stopPropagation(); next(); }} className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl flex items-center justify-center transition" aria-label="Next">›</button>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={lightbox}
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.3 }}
-                className="relative max-w-5xl max-h-[85vh] w-full flex flex-col items-center"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img src={PHOTOS[lightbox].src} alt={PHOTOS[lightbox].caption} className="max-h-[78vh] w-auto max-w-full object-contain rounded-2xl shadow-2xl" />
-                <p className="mt-4 text-white/90 font-script text-xl sm:text-2xl text-center">
-                  {PHOTOS[lightbox].caption}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ============ THE MOSAIC — Then ❤️ Now ============ */}
-      <div className="max-w-6xl mx-auto text-center mb-10">
-        <motion.h3
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
           className="font-display text-3xl sm:text-4xl md:text-5xl text-gradient mb-2"
